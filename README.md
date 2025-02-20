@@ -31,7 +31,7 @@ _services:
     image: quay.io/keycloak/keycloak:26.1.6_
 
 Keycloak has some mandatory variables that we need to define for it to work, they are defined inside the "environment" token:
-
+```
 _services:
   my-keycloak:
     image: quay.io/keycloak/keycloak:24.0
@@ -43,18 +43,19 @@ _services:
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_HEALTH_ENABLED: "true"
       KC_LOG_LEVEL: info_
-
+```
 In summary, the variables and their function:
 
-_KC_HOSTNAME_: Hostname used by Keycloak. Running locally must be "localhost".
-_KC_HOSTNAME_PORT_: Keycloak container internal port. Default is 7080.
-_KC_HOSTNAME_STRICT_BACKCHANEL_: Enables or disables backchannel communication between servers. Personally, I leave it enabled to use propagated logout and token sharing.
-_KEYCLOAK_ADMIN_: Keycloak admin user username.
-_KEYCLOAK_ADMIN_PASSWORD_: Keycloak admin user password.
-_KC_HEALTH_ENABLED_: Enables Keycloak health endpoints, enabling server health status checks. This is useful for monitoring and ensuring that Keycloak is working correctly.
-_KC_LOG_LEVEL_: Set the log level for Keycloak. You can check the possible log levels here.
-As I enabled _KC_HEALTH_ENABLED_, we need to define how the healthcheck will be performed:
+* _KC_HOSTNAME_: Hostname used by Keycloak. Running locally must be "localhost".
+* _KC_HOSTNAME_PORT_: Keycloak container internal port. Default is 7080.
+* _KC_HOSTNAME_STRICT_BACKCHANEL_: Enables or disables backchannel communication between servers. Personally, I leave it enabled to use propagated logout and token sharing.
+* _KEYCLOAK_ADMIN_: Keycloak admin user username.
+* _KEYCLOAK_ADMIN_PASSWORD_: Keycloak admin user password.
+* _KC_HEALTH_ENABLED_: Enables Keycloak health endpoints, enabling server health status checks. This is useful for monitoring and ensuring that Keycloak is working correctly.
+* _KC_LOG_LEVEL_: Set the log level for Keycloak. You can check the possible log levels here.
 
+As I enabled _KC_HEALTH_ENABLED_, we need to define how the healthcheck will be performed:
+```
 _services:
   my-keycloak:
     image: quay.io/keycloak/keycloak:24.0
@@ -71,12 +72,12 @@ _services:
       interval: 15s
       timeout: 2s
       retries: 15_
-
+```
 Basically an http request will be sent to _http://localhost:7080/health/ready_ every 15 seconds to check if everything is ok. 
 If it gives a timeout of 2 seconds, it will try 15 times, and if it still doesn’t give a health signal, Docker will mark the container as “unhealty” and take the necessary action.
 
 Now let’s define the command to run Keycloak:
-
+```
 _services:
   my-keycloak:
     image: quay.io/keycloak/keycloak:24.0
@@ -94,9 +95,9 @@ _services:
       timeout: 2s
       retries: 15
     command: ["start-dev", "--http-port", "7080", "--https-port", "7443"]_
-
+```
 Finally, we will expose the container ports to be accessible from the outside and, as a best practice, create a network in Docker for communication between containers, if necessary:
-
+```
 _services:
   my-keycloak:
     image: quay.io/keycloak/keycloak:24.0
@@ -122,11 +123,11 @@ _services:
 networks:
   local_network:
     driver: bridge_
-
+```
 To run this container, simply enter the root folder that contains the _docker-compose.yml_ file and run the following command:
-
+```
 _docker-compose up_
-
+```
 ## **Usage**
 
 To use Project Title, follow these steps:
